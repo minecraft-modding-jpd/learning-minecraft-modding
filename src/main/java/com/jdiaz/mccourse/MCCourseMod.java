@@ -1,6 +1,8 @@
-package com.jdiaz.examplemod;
+package com.jdiaz.mccourse;
 
+import com.jdiaz.mccourse.item.ModItems;
 import com.mojang.logging.LogUtils;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,6 +19,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 
+import java.util.Objects;
+
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(MCCourseMod.MOD_ID)
 public class MCCourseMod {
@@ -28,6 +32,11 @@ public class MCCourseMod {
 
     public MCCourseMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+
+        // to add the items to the game, we need to instantiate the class that registers them
+        // this is done by passing the event bus to the register method
+        ModItems.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -57,6 +66,14 @@ public class MCCourseMod {
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
 
+
+        // to add the item to the creative tab, we need to add it to the event
+        // this is done by calling the accept method on the event
+        // for now, the items is being added to an already existing tab
+        if (Objects.equals(event.getTabKey(), CreativeModeTabs.INGREDIENTS)) {
+            event.accept(ModItems.ALEXANDRITE);
+            event.accept(ModItems.RAW_ALEXANDRITE);
+        }
 //            event.accept(EXAMPLE_BLOCK_ITEM);
     }
 
